@@ -9,16 +9,23 @@
 (def app-state
   (atom
     {:posts
-     [{:title "Hello world" :body "Hello there!" :tags ["hello-word" "clojure"] :url "http://google.com"}
-      {:title "Hello world" :body "Hello there!" :tags ["hello-word" "clojure"] :url "http://google.com"}
-      {:title "Hello world" :body "Hello there!" :tags ["hello-word" "clojure"] :url "http://google.com"}]}))
+     [{:title "Hello world" :body "Hello there!"
+       :tags ["hello-word" "clojure"] :url "http://google.com"
+       :created-at "10/10/2014" :updated-at "10/10/2014"}
+      {:title "Hello world" :body "Hello there!"
+       :tags ["hello-word" "clojure"] :url "http://google.com"
+       :created-at "10/10/2014" :updated-at "10/10/2014"}
+      {:title "Hello world" :body "Hello there!"
+       :tags ["hello-word" "clojure"] :url "http://google.com"
+       :created-at "10/10/2014" :updated-at "10/10/2014"}]}))
 
 (defn post-view [post owner]
   (reify
     om/IRenderState
     (render-state [this {:keys [delete]}]
       (dom/article nil
-        (dom/h2 {:className "post-title"}
+        (dom/span #js {:className "pull-right"} (:created-at post))
+        (dom/h2 #js {:className "post-title"}
                 (dom/a #js {:href (:url post)} (:title post)))
         (dom/p nil (:body post))))))
 
@@ -26,8 +33,8 @@
   (reify
     om/IRender
     (render [this]
-      (dom/div nil
-        (dom/h2 nil "Blog")
+      (dom/div #js {:className "container"}
+        (dom/h1 #js {:className "blog-title"} "Blog")
         (apply dom/ul nil
            (om/build-all post-view (:posts app)))))))
 
