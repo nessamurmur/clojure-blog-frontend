@@ -1,6 +1,7 @@
 (ns blog.core
   (:require [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true]))
+            [om.dom :as dom :include-macros true]
+            [blog.components.posts :as post-component]))
 
 (enable-console-print!)
 
@@ -17,27 +18,5 @@
        :category "clojure" :url "http://google.com"
        :created-at "10/10/2014" :updated-at "10/10/2014"}]}))
 
-(defn post-view [post owner]
-  (reify
-    om/IRender
-    (render [this]
-      (dom/div #js {:className "post"}
-        (dom/section nil
-          (dom/div #js {:className "post-preview col-xs-10  no-gutter"}
-            (dom/h2 nil
-              (dom/a #js {:href "post.html"} (:title post)))
-            (dom/p nil (:body post))
-            (dom/p #js {:className "meta"}
-              (dom/a #js {:href "category.html"} (:category post))
-              (dom/i #js {:className "link-spacer"})
-              (dom/i #js {:className "entypo-bookmark"} (str " " (:created-at post))))))))))
-
-(defn posts-view [app owner]
-  (reify
-    om/IRender
-    (render [this]
-      (apply dom/ul nil
-        (om/build-all post-view (:posts app))))))
-
-(om/root posts-view app-state
+(om/root post-component/posts-view app-state
          {:target (. js/document (getElementById "posts"))})
