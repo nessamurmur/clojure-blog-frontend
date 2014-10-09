@@ -1,6 +1,13 @@
 (ns blog.components.posts
   (:require [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true]))
+            [om.dom :as dom :include-macros true]
+            [clojure.string :as string]))
+
+(defn get-category [post]
+  (string/capitalize (str (:category post) " ")))
+
+(defn get-timestamp [post]
+  (str " " (:created-at post)))
 
 (defn post-view [post owner]
   (reify
@@ -12,9 +19,8 @@
             (dom/a #js {:href "post.html"} (:title post)))
           (dom/p nil (:body post))
           (dom/p #js {:className "meta"}
-            (dom/a #js {:href "category.html"} (:category post))
-            (dom/i #js {:className "link-spacer"})
-            (dom/i #js {:className "entypo-bookmark"} (str " " (:created-at post)))))))))
+            (dom/a #js {:href "category.html"} (get-category post))
+            (dom/i #js {:className "entypo-bookmark"} (get-timestamp post))))))))
 
 (defn posts-view [app owner]
   (reify
